@@ -4,11 +4,18 @@
 <meta charset="UTF-8">
 <title>Lekha 🌸</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;600;800&display=swap" rel="stylesheet">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--text-color:#ffffff;--card-bg:rgba(255,255,255,0.25);--shadow:rgba(255,105,180,0.5)}
+
+:root{
+  --text-color:#ffffff;
+  --card-bg:rgba(255,255,255,0.25);
+  --shadow:rgba(255,105,180,0.5);
+}
+
 body{
   font-family:'Nunito',sans-serif;
   height:100vh;
@@ -16,9 +23,12 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
-  transition:opacity 1.2s ease, background 1.5s ease;
+  transition:opacity 1.2s ease, background 1.5s ease, filter 1s ease;
 }
+
 .fade-out{opacity:0}
+.dimmed{filter:brightness(0.92)}
+
 .card{
   background:var(--card-bg);
   backdrop-filter:blur(14px);
@@ -29,18 +39,90 @@ body{
   max-width:520px;
   box-shadow:0 0 80px var(--shadow);
   animation:float 6s ease-in-out infinite;
+  transition:box-shadow 1s ease;
 }
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}
-h1{color:var(--text-color);font-size:2.6rem;text-shadow:0 0 20px currentColor}
-p{color:var(--text-color);font-size:1.2rem;margin-top:15px;line-height:1.7;white-space:pre-line}
-.heart{font-size:3.5rem;animation:beat 1.4s infinite}
-@keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}
-.sakura,.bubu,.rain{position:absolute;top:-10%;opacity:0.8}
-.rain{animation:fallRain linear infinite}
-@keyframes fallRain{to{transform:translateY(120vh)}}
-.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.7);color:white;padding:14px 26px;border-radius:30px;font-size:1rem;opacity:0;transition:opacity .6s}
+
+.card.soft-glow{
+  box-shadow:0 0 40px rgba(255,255,255,0.4);
+}
+
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-15px)}
+}
+
+h1{
+  color:var(--text-color);
+  font-size:2.6rem;
+  text-shadow:0 0 20px currentColor;
+}
+
+p{
+  color:var(--text-color);
+  font-size:1.2rem;
+  margin-top:15px;
+  line-height:1.7;
+  white-space:pre-line;
+  transition:opacity .8s ease;
+}
+
+.fade-text{opacity:0}
+
+.heart{
+  font-size:3.5rem;
+  cursor:pointer;
+  animation:beat 1.4s infinite;
+  user-select:none;
+}
+
+@keyframes beat{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.25)}
+}
+
+/* Rain */
+.rain{
+  position:absolute;
+  top:-10%;
+  opacity:0.8;
+  animation:fallRain linear infinite;
+}
+@keyframes fallRain{
+  to{transform:translateY(120vh)}
+}
+
+/* Toast */
+.toast{
+  position:fixed;
+  bottom:30px;
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(0,0,0,0.7);
+  color:white;
+  padding:14px 26px;
+  border-radius:30px;
+  font-size:1rem;
+  opacity:0;
+  transition:opacity .6s ease;
+}
 .toast.show{opacity:1}
-.audio-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:999}
+
+/* Audio overlay */
+.audio-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(8px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+}
+.audio-overlay button{
+  font-size:1.2rem;
+  padding:18px 36px;
+  border-radius:40px;
+}
 </style>
 </head>
 
@@ -54,8 +136,8 @@ p{color:var(--text-color);font-size:1.2rem;margin-top:15px;line-height:1.7;white
   <source src="assets/music.mp3" type="audio/mpeg">
 </audio>
 
-<div class="card">
-  <div class="heart">💗</div>
+<div class="card" id="card">
+  <div class="heart" id="heart">💗</div>
   <h1 id="title"></h1>
   <p id="text"></p>
 </div>
@@ -63,6 +145,7 @@ p{color:var(--text-color);font-size:1.2rem;margin-top:15px;line-height:1.7;white
 <div class="toast" id="toast">🌙 New episode unlocked</div>
 
 <script>
+/* ========= EPISODES ========= */
 const episodes={
   7:{
     t:"Episode 5: Comfort Arc",
@@ -71,10 +154,12 @@ const episodes={
   }
 };
 
-const today=7;
-const ep=episodes[today];
-document.body.style.background=ep.bg;
+/* ========= INIT (TEST) ========= */
+const today = 7;
+const ep = episodes[today];
+document.body.style.background = ep.bg;
 
+/* Auto contrast */
 function getTextColor(bg){
   const c=bg.replace("#","");
   const r=parseInt(c.substr(0,2),16);
@@ -84,9 +169,12 @@ function getTextColor(bg){
   return lum>0.6?"#2b2b2b":"#ffffff";
 }
 document.documentElement.style.setProperty("--text-color",getTextColor(ep.bg));
-document.getElementById("title").innerText=ep.t;
-document.getElementById("text").innerText=ep.m;
 
+document.getElementById("title").innerText = ep.t;
+const textEl = document.getElementById("text");
+textEl.innerText = ep.m;
+
+/* Rain */
 for(let i=0;i<40;i++){
   const r=document.createElement("div");
   r.className="rain";
@@ -97,12 +185,30 @@ for(let i=0;i<40;i++){
   document.body.appendChild(r);
 }
 
+/* Heart reveal */
+let revealed=false;
+document.getElementById("heart").onclick=()=>{
+  if(revealed) return;
+  revealed=true;
+  document.body.classList.add("dimmed");
+  document.getElementById("card").classList.add("soft-glow");
+  textEl.classList.add("fade-text");
+  setTimeout(()=>{
+    textEl.innerText="If I’m calm now, it’s because you taught me how staying feels.";
+    textEl.classList.remove("fade-text");
+  },800);
+};
+
+/* Audio */
 function startExperience(){
   const a=document.getElementById("music");
   a.volume=0;
   a.play().then(()=>{
     let v=0;
-    const f=setInterval(()=>{if(v>=1)clearInterval(f);a.volume=v;v+=0.05},100);
+    const f=setInterval(()=>{
+      if(v>=1)clearInterval(f);
+      a.volume=v;v+=0.05;
+    },100);
   });
   document.getElementById("audioOverlay").style.display="none";
 }
