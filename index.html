@@ -11,9 +11,9 @@
 *{margin:0;padding:0;box-sizing:border-box}
 
 :root{
-  --text-color:#ffffff;
-  --card-bg:rgba(255,255,255,0.25);
-  --shadow:rgba(255,105,180,0.5);
+  --text:#fff;
+  --card:rgba(255,255,255,0.28);
+  --shadow:rgba(255,105,180,.45);
 }
 
 body{
@@ -23,92 +23,97 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
-  transition:opacity 1.2s ease, background 1.5s ease, filter 1s ease;
+  transition:opacity 1.2s ease, background 1.6s ease;
 }
 
 .fade-out{opacity:0}
-.dimmed{filter:brightness(0.92)}
 
-.card{
-  background:var(--card-bg);
-  backdrop-filter:blur(14px);
-  padding:45px 35px;
-  border-radius:30px;
-  text-align:center;
-  width:90%;
-  max-width:520px;
-  box-shadow:0 0 80px var(--shadow);
-  animation:float 6s ease-in-out infinite;
-  transition:box-shadow 1s ease;
+/* Ambient light orbs */
+.orb{
+  position:absolute;
+  border-radius:50%;
+  filter:blur(40px);
+  opacity:.35;
+  animation:drift linear infinite;
+}
+@keyframes drift{
+  to{transform:translateY(120vh)}
 }
 
-.card.soft-glow{
-  box-shadow:0 0 40px rgba(255,255,255,0.4);
+/* Card */
+.card{
+  background:var(--card);
+  backdrop-filter:blur(16px);
+  padding:48px 38px;
+  border-radius:32px;
+  text-align:center;
+  width:90%;
+  max-width:540px;
+  box-shadow:0 0 90px var(--shadow);
+  animation:float 7s ease-in-out infinite;
 }
 
 @keyframes float{
   0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-15px)}
+  50%{transform:translateY(-18px)}
 }
 
 h1{
-  color:var(--text-color);
+  color:var(--text);
   font-size:2.6rem;
-  text-shadow:0 0 20px currentColor;
+  text-shadow:0 0 25px currentColor;
 }
 
 p{
-  color:var(--text-color);
-  font-size:1.2rem;
-  margin-top:15px;
-  line-height:1.7;
+  color:var(--text);
+  font-size:1.18rem;
+  margin-top:18px;
+  line-height:1.8;
   white-space:pre-line;
-  transition:opacity .8s ease;
 }
 
-.fade-text{opacity:0}
-
+/* Heart */
 .heart{
-  font-size:3.5rem;
-  cursor:pointer;
+  font-size:3.6rem;
   animation:beat 1.4s infinite;
-  user-select:none;
+  cursor:pointer;
 }
-
 @keyframes beat{
   0%,100%{transform:scale(1)}
   50%{transform:scale(1.25)}
 }
 
+/* Sakura */
 .sakura{
   position:absolute;
   top:-10%;
-  opacity:0.8;
   animation:fall linear infinite;
 }
+@keyframes fall{
+  to{transform:translateY(120vh) rotate(360deg)}
+}
 
-@keyframes fall{to{transform:translateY(120vh) rotate(360deg)}}
-
+/* Toast */
 .toast{
   position:fixed;
   bottom:30px;
   left:50%;
   transform:translateX(-50%);
-  background:rgba(0,0,0,0.7);
+  background:rgba(0,0,0,0.75);
   color:white;
   padding:14px 26px;
   border-radius:30px;
-  font-size:1rem;
   opacity:0;
-  transition:opacity .6s ease;
+  transition:.6s;
 }
 .toast.show{opacity:1}
 
+/* Audio overlay */
 .audio-overlay{
   position:fixed;
   inset:0;
   background:rgba(0,0,0,0.6);
-  backdrop-filter:blur(8px);
+  backdrop-filter:blur(10px);
   display:flex;
   align-items:center;
   justify-content:center;
@@ -116,7 +121,7 @@ p{
 }
 .audio-overlay button{
   font-size:1.2rem;
-  padding:18px 36px;
+  padding:18px 38px;
   border-radius:40px;
 }
 </style>
@@ -132,67 +137,63 @@ p{
   <source src="assets/music.mp3" type="audio/mpeg">
 </audio>
 
-<div class="card" id="card">
-  <div class="heart" id="heart">💗</div>
+<div class="card">
+  <div class="heart">💗</div>
   <h1 id="title"></h1>
   <p id="text"></p>
+  <div id="actions"></div>
 </div>
+
+<div class="toast" id="toast">🌙 New episode unlocked</div>
 
 <script>
 /* ========= EPISODES ========= */
 const episodes={
-  8:{
-    t:"Episode 6: Growing Feelings",
-    m:"My heart has been buffering…\nand it’s you.",
-    bg:"#d9f7ff"
-  }
+  3:{t:"Episode 1: A Confession 🌸",m:"Lekha…\nIf this were an anime,\nthis is where the music fades\nand I finally say what my heart has known.",bg:"linear-gradient(120deg,#ff9a9e,#fad0c4)"},
+  4:{t:"Episode 2: You Appear",m:"You appear in my thoughts\nlike a scene I replay.",bg:"linear-gradient(120deg,#a18cd1,#fbc2eb)"},
+  5:{t:"Episode 3: The Us 🧸",m:"Some stories don’t rush.\nThey stay.\nThey grow.\nQuietly becoming ‘us’.",bg:"linear-gradient(120deg,#fad0c4,#ffd1ff)"},
+  6:{t:"Episode 4: Your Smile",m:"Your smile finds me on ordinary days and changes them.\nIt softens my worries, steadies my heart,\nand reminds me that love doesn’t have to be loud to be real.",bg:"linear-gradient(120deg,#e0c3fc,#8ec5fc)"},
+  7:{t:"Episode 5: Comfort Arc",m:"I don’t need perfect days.\nJust a place beside you.",bg:"linear-gradient(120deg,#2b5876,#4e4376)"},
+  8:{t:"Episode 6: Growing Feelings",
+     m:"Somewhere between conversations and silences,\nmy heart stopped hesitating.\n\nLoving you didn’t arrive suddenly —\nit unfolded gently.\n\nIn the way I wait.\nIn the way I care.\nIn the way your presence now feels like home.",
+     bg:"linear-gradient(135deg,#fdfbfb,#ebedee)"},
+  9:{t:"Episode 7: Almost a Promise",m:"I don’t want perfect.\nI want you.",bg:"linear-gradient(120deg,#fccb90,#d57eeb)"},
+  10:{t:"Episode 8: Countdown",m:"Valentine’s is getting close.",bg:"linear-gradient(120deg,#fddb92,#d1fdff)"},
+  11:{t:"Episode 9: Every Timeline",m:"Every universe.\nStill you.",bg:"linear-gradient(120deg,#a1c4fd,#c2e9fb)"},
+  12:{t:"Episode 10: Two Days Left",m:"Almost there…",bg:"linear-gradient(120deg,#fbc8d4,#9795f0)"},
+  13:{t:"Episode 11: Tonight",m:"Tomorrow changes everything.",bg:"linear-gradient(120deg,#667eea,#764ba2)"},
+  14:{t:"Final Episode: Valentine’s 💖",m:"Lekha…\nWill you be my Valentine?",bg:"linear-gradient(120deg,#ff0844,#ffb199)"}
 };
 
-/* ===== TEST MODE: FORCE FEB 8 ===== */
-const today = 8; // ← TEST ONLY
-/* ================================= */
-
-const ep=episodes[today];
+/* ========= INIT ========= */
+const today=new Date().getDate();
+const ep=episodes[today]||episodes[3];
 document.body.style.background=ep.bg;
 
-function getTextColor(bg){
-  const c=bg.replace("#","");
-  const r=parseInt(c.substr(0,2),16);
-  const g=parseInt(c.substr(2,2),16);
-  const b=parseInt(c.substr(4,2),16);
-  const lum=(0.299*r+0.587*g+0.114*b)/255;
-  return lum>0.6?"#2b2b2b":"#ffffff";
-}
-document.documentElement.style.setProperty("--text-color",getTextColor(ep.bg));
-
-const textEl=document.getElementById("text");
 document.getElementById("title").innerText=ep.t;
-textEl.innerText=ep.m;
+document.getElementById("text").innerText=ep.m;
+
+/* Ambient orbs */
+for(let i=0;i<4;i++){
+  const o=document.createElement("div");
+  o.className="orb";
+  o.style.width=o.style.height=(200+Math.random()*200)+"px";
+  o.style.left=Math.random()*100+"vw";
+  o.style.background="radial-gradient(circle,rgba(255,182,193,.8),transparent)";
+  o.style.animationDuration=(20+Math.random()*20)+"s";
+  document.body.appendChild(o);
+}
 
 /* Sakura */
-for(let i=0;i<30;i++){
+for(let i=0;i<28;i++){
   const s=document.createElement("div");
   s.className="sakura";
   s.innerText="🌸";
   s.style.left=Math.random()*100+"vw";
   s.style.fontSize=(14+Math.random()*22)+"px";
-  s.style.animationDuration=(8+Math.random()*10)+"s";
+  s.style.animationDuration=(9+Math.random()*10)+"s";
   document.body.appendChild(s);
 }
-
-/* Hidden heart moment */
-let revealed=false;
-document.getElementById("heart").onclick=()=>{
-  if(revealed) return;
-  revealed=true;
-  document.body.classList.add("dimmed");
-  document.getElementById("card").classList.add("soft-glow");
-  textEl.classList.add("fade-text");
-  setTimeout(()=>{
-    textEl.innerText="If I’m calm now, it’s because you taught me how staying feels.";
-    textEl.classList.remove("fade-text");
-  },800);
-};
 
 /* Audio */
 function startExperience(){
@@ -200,13 +201,30 @@ function startExperience(){
   a.volume=0;
   a.play().then(()=>{
     let v=0;
-    const f=setInterval(()=>{
-      if(v>=1)clearInterval(f);
-      a.volume=v; v+=0.05;
-    },100);
+    const f=setInterval(()=>{if(v>=1)clearInterval(f);a.volume=v;v+=0.05},100);
   });
   document.getElementById("audioOverlay").style.display="none";
 }
+
+/* Valentine actions */
+if(today===14){
+  document.getElementById("actions").innerHTML=
+   `<button onclick="yes()">YES 💖</button>
+    <button onclick="no()">NO 🙈</button>`;
+}
+function yes(){document.getElementById("text").innerText="Happiest ending unlocked 💍💖";}
+function no(){document.getElementById("text").innerText="The story isn’t over yet 😉";}
+
+/* Midnight refresh */
+const now=new Date();
+const midnight=new Date(); midnight.setHours(24,0,0,0);
+setTimeout(()=>{
+  document.getElementById("toast").classList.add("show");
+  setTimeout(()=>{
+    document.body.classList.add("fade-out");
+    setTimeout(()=>location.reload(),1200);
+  },1500);
+},midnight-now);
 </script>
 
 </body>
