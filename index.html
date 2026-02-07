@@ -80,18 +80,15 @@ p{
   50%{transform:scale(1.25)}
 }
 
-/* Rain */
-.rain{
+.sakura{
   position:absolute;
   top:-10%;
   opacity:0.8;
-  animation:fallRain linear infinite;
-}
-@keyframes fallRain{
-  to{transform:translateY(120vh)}
+  animation:fall linear infinite;
 }
 
-/* Toast */
+@keyframes fall{to{transform:translateY(120vh) rotate(360deg)}}
+
 .toast{
   position:fixed;
   bottom:30px;
@@ -107,7 +104,6 @@ p{
 }
 .toast.show{opacity:1}
 
-/* Audio overlay */
 .audio-overlay{
   position:fixed;
   inset:0;
@@ -142,24 +138,23 @@ p{
   <p id="text"></p>
 </div>
 
-<div class="toast" id="toast">🌙 New episode unlocked</div>
-
 <script>
 /* ========= EPISODES ========= */
 const episodes={
-  7:{
-    t:"Episode 5: Comfort Arc",
-    m:"Not every day needs answers.\nSome days just need someone who stays.\nI don’t want to fix the rain —\nI want to sit beside you,\nlisten to it fall,\nand choose you anyway.",
-    bg:"#2f3e55"
+  8:{
+    t:"Episode 6: Growing Feelings",
+    m:"My heart has been buffering…\nand it’s you.",
+    bg:"#d9f7ff"
   }
 };
 
-/* ========= INIT (TEST) ========= */
-const today = 7;
-const ep = episodes[today];
-document.body.style.background = ep.bg;
+/* ===== TEST MODE: FORCE FEB 8 ===== */
+const today = 8; // ← TEST ONLY
+/* ================================= */
 
-/* Auto contrast */
+const ep=episodes[today];
+document.body.style.background=ep.bg;
+
 function getTextColor(bg){
   const c=bg.replace("#","");
   const r=parseInt(c.substr(0,2),16);
@@ -170,22 +165,22 @@ function getTextColor(bg){
 }
 document.documentElement.style.setProperty("--text-color",getTextColor(ep.bg));
 
-document.getElementById("title").innerText = ep.t;
-const textEl = document.getElementById("text");
-textEl.innerText = ep.m;
+const textEl=document.getElementById("text");
+document.getElementById("title").innerText=ep.t;
+textEl.innerText=ep.m;
 
-/* Rain */
-for(let i=0;i<40;i++){
-  const r=document.createElement("div");
-  r.className="rain";
-  r.innerText="💧";
-  r.style.left=Math.random()*100+"vw";
-  r.style.fontSize="18px";
-  r.style.animationDuration=(6+Math.random()*6)+"s";
-  document.body.appendChild(r);
+/* Sakura */
+for(let i=0;i<30;i++){
+  const s=document.createElement("div");
+  s.className="sakura";
+  s.innerText="🌸";
+  s.style.left=Math.random()*100+"vw";
+  s.style.fontSize=(14+Math.random()*22)+"px";
+  s.style.animationDuration=(8+Math.random()*10)+"s";
+  document.body.appendChild(s);
 }
 
-/* Heart reveal */
+/* Hidden heart moment */
 let revealed=false;
 document.getElementById("heart").onclick=()=>{
   if(revealed) return;
@@ -207,7 +202,7 @@ function startExperience(){
     let v=0;
     const f=setInterval(()=>{
       if(v>=1)clearInterval(f);
-      a.volume=v;v+=0.05;
+      a.volume=v; v+=0.05;
     },100);
   });
   document.getElementById("audioOverlay").style.display="none";
