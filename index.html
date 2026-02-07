@@ -142,7 +142,6 @@ p{
   <div class="heart" id="heart">💗</div>
   <h1 id="title"></h1>
   <p id="text"></p>
-  <div id="actions"></div>
 </div>
 
 <div class="toast" id="toast">🌙 New episode unlocked</div>
@@ -150,11 +149,6 @@ p{
 <script>
 /* ========= EPISODES ========= */
 const episodes={
-  3:{t:"Episode 1: A Confession 🌸",m:"Lekha…\nIf this were an anime,\nthis is where the music fades\nand I finally say what my heart has known.",bg:"linear-gradient(120deg,#ff9a9e,#fad0c4)"},
-  4:{t:"Episode 2: You Appear",m:"You appear in my thoughts\nlike a scene I replay.",bg:"linear-gradient(120deg,#a18cd1,#fbc2eb)"},
-  5:{t:"Episode 3: The Us 🧸",m:"Some stories don’t rush.\nThey stay.\nThey grow.\nQuietly becoming ‘us’.",bg:"linear-gradient(120deg,#fad0c4,#ffd1ff)"},
-  6:{t:"Episode 4: Your Smile",m:"Your smile finds me on ordinary days and changes them.",bg:"linear-gradient(120deg,#e0c3fc,#8ec5fc)"},
-  7:{t:"Episode 5: Comfort Arc",m:"I don’t need perfect days.\nJust a place beside you.",bg:"linear-gradient(120deg,#2b5876,#4e4376)"},
   8:{
     t:"Episode 6: Growing Feelings",
     m:
@@ -164,7 +158,6 @@ There was no dramatic moment.
 Just quiet realizations.
 Soft pauses.
 And a heart learning where it belongs.`,
-    bg:"linear-gradient(135deg,#fdfbfb,#ebedee)",
     secret:
 `And then there’s this part I don’t say out loud.
 
@@ -174,24 +167,19 @@ without fear,
 without hesitation.
 
 If my heart feels steady now,
-it’s because it learned how to stay with you.`
-  },
-  9:{t:"Episode 7: Almost a Promise",m:"I don’t want perfect.\nI want you.",bg:"linear-gradient(120deg,#fccb90,#d57eeb)"},
-  10:{t:"Episode 8: Countdown",m:"Valentine’s is getting close.",bg:"linear-gradient(120deg,#fddb92,#d1fdff)"},
-  11:{t:"Episode 9: Every Timeline",m:"Every universe.\nStill you.",bg:"linear-gradient(120deg,#a1c4fd,#c2e9fb)"},
-  12:{t:"Episode 10: Two Days Left",m:"Almost there…",bg:"linear-gradient(120deg,#fbc8d4,#9795f0)"},
-  13:{t:"Episode 11: Tonight",m:"Tomorrow changes everything.",bg:"linear-gradient(120deg,#667eea,#764ba2)"},
-  14:{t:"Final Episode: Valentine’s 💖",m:"Lekha…\nWill you be my Valentine?",bg:"linear-gradient(120deg,#ff0844,#ffb199)"}
+it’s because it learned how to stay with you.`,
+    bg:"linear-gradient(135deg,#fdfbfb,#ebedee)"
+  }
 };
 
-/* ========= INIT ========= */
-const today=new Date().getDate(); // set to 8 for testing
-const ep=episodes[today]||episodes[3];
+/* ========= TEST MODE ========= */
+const today = 8; // 🔴 FOR TESTING ONLY
+const ep = episodes[today];
 
-document.body.style.background=ep.bg;
-document.getElementById("title").innerText=ep.t;
-const textEl=document.getElementById("text");
-textEl.innerText=ep.m;
+document.body.style.background = ep.bg;
+document.getElementById("title").innerText = ep.t;
+const textEl = document.getElementById("text");
+textEl.innerText = ep.m;
 
 /* Ambient */
 for(let i=0;i<4;i++){
@@ -213,10 +201,10 @@ for(let i=0;i<26;i++){
   document.body.appendChild(s);
 }
 
-/* 💗 Heart interaction (Feb 8 only) */
+/* 💗 Heart → smooth second layer */
 let revealed=false;
 document.getElementById("heart").onclick=()=>{
-  if(today!==8 || revealed || !ep.secret) return;
+  if(revealed) return;
   revealed=true;
 
   document.body.classList.add("dimmed");
@@ -235,30 +223,13 @@ function startExperience(){
   a.volume=0;
   a.play().then(()=>{
     let v=0;
-    const f=setInterval(()=>{if(v>=1)clearInterval(f);a.volume=v;v+=0.05},100);
+    const f=setInterval(()=>{
+      if(v>=1)clearInterval(f);
+      a.volume=v; v+=0.05;
+    },100);
   });
   document.getElementById("audioOverlay").style.display="none";
 }
-
-/* Valentine actions */
-if(today===14){
-  document.getElementById("actions").innerHTML=
-   `<button onclick="yes()">YES 💖</button>
-    <button onclick="no()">NO 🙈</button>`;
-}
-function yes(){textEl.innerText="Happiest ending unlocked 💍💖";}
-function no(){textEl.innerText="The story isn’t over yet 😉";}
-
-/* Midnight refresh */
-const now=new Date();
-const midnight=new Date(); midnight.setHours(24,0,0,0);
-setTimeout(()=>{
-  document.getElementById("toast").classList.add("show");
-  setTimeout(()=>{
-    document.body.classList.add("fade-out");
-    setTimeout(()=>location.reload(),1200);
-  },1500);
-},midnight-now);
 </script>
 
 </body>
