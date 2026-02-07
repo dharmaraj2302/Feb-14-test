@@ -23,24 +23,12 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
-  transition:opacity 1.2s ease, background 1.6s ease;
+  transition:opacity 1.2s ease, background 1.6s ease, filter 1s ease;
 }
 
 .fade-out{opacity:0}
+.dimmed{filter:brightness(.9)}
 
-/* Ambient light orbs */
-.orb{
-  position:absolute;
-  border-radius:50%;
-  filter:blur(40px);
-  opacity:.35;
-  animation:drift linear infinite;
-}
-@keyframes drift{
-  to{transform:translateY(120vh)}
-}
-
-/* Card */
 .card{
   background:var(--card);
   backdrop-filter:blur(16px);
@@ -51,6 +39,10 @@ body{
   max-width:540px;
   box-shadow:0 0 90px var(--shadow);
   animation:float 7s ease-in-out infinite;
+  transition:box-shadow 1s ease;
+}
+.card.glow{
+  box-shadow:0 0 120px rgba(255,182,193,.9);
 }
 
 @keyframes float{
@@ -68,11 +60,12 @@ p{
   color:var(--text);
   font-size:1.18rem;
   margin-top:18px;
-  line-height:1.8;
+  line-height:1.85;
   white-space:pre-line;
+  transition:opacity .8s ease;
 }
+.fade-text{opacity:0}
 
-/* Heart */
 .heart{
   font-size:3.6rem;
   animation:beat 1.4s infinite;
@@ -83,7 +76,17 @@ p{
   50%{transform:scale(1.25)}
 }
 
-/* Sakura */
+.orb{
+  position:absolute;
+  border-radius:50%;
+  filter:blur(40px);
+  opacity:.35;
+  animation:drift linear infinite;
+}
+@keyframes drift{
+  to{transform:translateY(120vh)}
+}
+
 .sakura{
   position:absolute;
   top:-10%;
@@ -93,7 +96,6 @@ p{
   to{transform:translateY(120vh) rotate(360deg)}
 }
 
-/* Toast */
 .toast{
   position:fixed;
   bottom:30px;
@@ -108,7 +110,6 @@ p{
 }
 .toast.show{opacity:1}
 
-/* Audio overlay */
 .audio-overlay{
   position:fixed;
   inset:0;
@@ -137,8 +138,8 @@ p{
   <source src="assets/music.mp3" type="audio/mpeg">
 </audio>
 
-<div class="card">
-  <div class="heart">💗</div>
+<div class="card" id="card">
+  <div class="heart" id="heart">💗</div>
   <h1 id="title"></h1>
   <p id="text"></p>
   <div id="actions"></div>
@@ -152,11 +153,29 @@ const episodes={
   3:{t:"Episode 1: A Confession 🌸",m:"Lekha…\nIf this were an anime,\nthis is where the music fades\nand I finally say what my heart has known.",bg:"linear-gradient(120deg,#ff9a9e,#fad0c4)"},
   4:{t:"Episode 2: You Appear",m:"You appear in my thoughts\nlike a scene I replay.",bg:"linear-gradient(120deg,#a18cd1,#fbc2eb)"},
   5:{t:"Episode 3: The Us 🧸",m:"Some stories don’t rush.\nThey stay.\nThey grow.\nQuietly becoming ‘us’.",bg:"linear-gradient(120deg,#fad0c4,#ffd1ff)"},
-  6:{t:"Episode 4: Your Smile",m:"Your smile finds me on ordinary days and changes them.\nIt softens my worries, steadies my heart,\nand reminds me that love doesn’t have to be loud to be real.",bg:"linear-gradient(120deg,#e0c3fc,#8ec5fc)"},
+  6:{t:"Episode 4: Your Smile",m:"Your smile finds me on ordinary days and changes them.",bg:"linear-gradient(120deg,#e0c3fc,#8ec5fc)"},
   7:{t:"Episode 5: Comfort Arc",m:"I don’t need perfect days.\nJust a place beside you.",bg:"linear-gradient(120deg,#2b5876,#4e4376)"},
-  8:{t:"Episode 6: Growing Feelings",
-     m:"Somewhere between conversations and silences,\nmy heart stopped hesitating.\n\nLoving you didn’t arrive suddenly —\nit unfolded gently.\n\nIn the way I wait.\nIn the way I care.\nIn the way your presence now feels like home.",
-     bg:"linear-gradient(135deg,#fdfbfb,#ebedee)"},
+  8:{
+    t:"Episode 6: Growing Feelings",
+    m:
+`It didn’t happen all at once.
+
+There was no dramatic moment.
+Just quiet realizations.
+Soft pauses.
+And a heart learning where it belongs.`,
+    bg:"linear-gradient(135deg,#fdfbfb,#ebedee)",
+    secret:
+`And then there’s this part I don’t say out loud.
+
+That loving you feels like choosing —
+every day,
+without fear,
+without hesitation.
+
+If my heart feels steady now,
+it’s because it learned how to stay with you.`
+  },
   9:{t:"Episode 7: Almost a Promise",m:"I don’t want perfect.\nI want you.",bg:"linear-gradient(120deg,#fccb90,#d57eeb)"},
   10:{t:"Episode 8: Countdown",m:"Valentine’s is getting close.",bg:"linear-gradient(120deg,#fddb92,#d1fdff)"},
   11:{t:"Episode 9: Every Timeline",m:"Every universe.\nStill you.",bg:"linear-gradient(120deg,#a1c4fd,#c2e9fb)"},
@@ -166,14 +185,15 @@ const episodes={
 };
 
 /* ========= INIT ========= */
-const today=new Date().getDate();
+const today=new Date().getDate(); // set to 8 for testing
 const ep=episodes[today]||episodes[3];
+
 document.body.style.background=ep.bg;
-
 document.getElementById("title").innerText=ep.t;
-document.getElementById("text").innerText=ep.m;
+const textEl=document.getElementById("text");
+textEl.innerText=ep.m;
 
-/* Ambient orbs */
+/* Ambient */
 for(let i=0;i<4;i++){
   const o=document.createElement("div");
   o.className="orb";
@@ -183,9 +203,7 @@ for(let i=0;i<4;i++){
   o.style.animationDuration=(20+Math.random()*20)+"s";
   document.body.appendChild(o);
 }
-
-/* Sakura */
-for(let i=0;i<28;i++){
+for(let i=0;i<26;i++){
   const s=document.createElement("div");
   s.className="sakura";
   s.innerText="🌸";
@@ -194,6 +212,22 @@ for(let i=0;i<28;i++){
   s.style.animationDuration=(9+Math.random()*10)+"s";
   document.body.appendChild(s);
 }
+
+/* 💗 Heart interaction (Feb 8 only) */
+let revealed=false;
+document.getElementById("heart").onclick=()=>{
+  if(today!==8 || revealed || !ep.secret) return;
+  revealed=true;
+
+  document.body.classList.add("dimmed");
+  document.getElementById("card").classList.add("glow");
+  textEl.classList.add("fade-text");
+
+  setTimeout(()=>{
+    textEl.innerText=ep.secret;
+    textEl.classList.remove("fade-text");
+  },800);
+};
 
 /* Audio */
 function startExperience(){
@@ -212,8 +246,8 @@ if(today===14){
    `<button onclick="yes()">YES 💖</button>
     <button onclick="no()">NO 🙈</button>`;
 }
-function yes(){document.getElementById("text").innerText="Happiest ending unlocked 💍💖";}
-function no(){document.getElementById("text").innerText="The story isn’t over yet 😉";}
+function yes(){textEl.innerText="Happiest ending unlocked 💍💖";}
+function no(){textEl.innerText="The story isn’t over yet 😉";}
 
 /* Midnight refresh */
 const now=new Date();
