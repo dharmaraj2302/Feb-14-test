@@ -28,7 +28,6 @@ body{
 
 .fade-out{opacity:0}
 
-/* Card */
 .card{
   background:var(--card-bg);
   padding:44px 34px;
@@ -73,25 +72,12 @@ p{
   50%{transform:scale(1.22)}
 }
 
-/* Effects */
-.sakura,.orb{
-  position:absolute;
-  pointer-events:none;
-}
-
-.sakura{
-  opacity:.8;
-  animation:fall linear infinite;
-}
-
-@keyframes fall{
-  to{transform:translateY(120vh) rotate(360deg)}
-}
-
 .orb{
+  position:absolute;
   border-radius:50%;
   background:rgba(255,255,255,.7);
   animation:floatOrb ease-in-out infinite;
+  pointer-events:none;
 }
 
 @keyframes floatOrb{
@@ -99,14 +85,12 @@ p{
   50%{transform:translateY(-22px)}
 }
 
-/* Aurora */
 @keyframes auroraMove{
   0%{background-position:0% 50%}
   50%{background-position:100% 50%}
   100%{background-position:0% 50%}
 }
 
-/* Toast */
 .toast{
   position:fixed;
   bottom:28px;
@@ -119,11 +103,9 @@ p{
   font-size:.95rem;
   opacity:0;
   transition:.6s;
-  z-index:10;
 }
 .toast.show{opacity:1}
 
-/* Audio overlay */
 .audio-overlay{
   position:fixed;
   inset:0;
@@ -163,36 +145,69 @@ p{
 <script>
 /* ========= EPISODES ========= */
 const episodes={
-  8:{
-    t:"Episode: Growing Feelings 💜",
-    m:
-"Some feelings don’t arrive loudly.\nThey grow quietly — through conversations,\nthrough comfort,\nthrough the way your presence makes everything softer.\n\nSomewhere between laughter and silence,\nmy heart stopped asking questions\nand started choosing you.",
-    reveal:
-"It wasn’t dramatic.\nIt was natural.\nLike realizing you feel safe.\nLike knowing that staying doesn’t feel heavy.\n\nIf love grows like this —\nthen I’m already home.",
-    bg:"linear-gradient(135deg,#cbb7ff,#8b7cf0,#4b3f72)"
-  },
+  3:{t:"Episode 1: A Confession 🌸",
+     m:"If this were an anime,\nthis is the scene where courage wins.\nWhere petals fall.\nWhere I finally say what my heart has been holding.\n\nWill you be mine?",
+     reveal:"It took time to find the words.\nBut once they existed,\nthere was never a doubt.",
+     bg:"linear-gradient(135deg,#ffd6e8,#ff9ebc,#ffc2d9)"},
 
-  11:{
-    t:"Episode: Every Timeline 🌌",
-    m:
-"Sometimes I wonder how many versions of life exist.\n\nDifferent cities.\nDifferent choices.\nDifferent timings.\n\nAnd somehow — in every one of them —\nI still find you.\n\nNot because fate is loud,\nbut because my heart always recognizes the same feeling.",
-    reveal:
-"It’s not about perfection.\nIt’s about familiarity.\n\nThe way your presence feels steady.\nThe way silence with you never feels empty.\n\nIf there are a thousand timelines,\nI’d choose you in every single one —\nwithout hesitation.",
-    bg:"linear-gradient(135deg,#1b1736,#4b3f72,#8b7cf0)"
-  },
+  4:{t:"Episode 2: You Appear",
+     m:"Some people don’t arrive loudly.\nThey appear.\nQuietly.\nAnd suddenly the story changes.",
+     reveal:"From that moment,\nnothing felt random anymore.",
+     bg:"linear-gradient(135deg,#e6dcff,#cdb4ff,#b8c0ff)"},
 
-  14:{
-    t:"Final Episode: Valentine’s 💖",
-    m:
-"Lekha…\n\nAll these days weren’t just moments.\nThey were me learning how love feels.\n\nIf this story has a future,\nI hope it’s one we write together.\n\nWill you be my Valentine?",
-    reveal:
-"No matter your answer —\nthank you for being the chapter\nthat changed me forever.",
-    bg:"linear-gradient(135deg,#ff5c8a,#ffb3c7,#ffd6e8)"
-  }
+  5:{t:"Episode 3: The Us 🧸",
+     m:"Every story has a pair worth rooting for.\nNot perfect.\nNot easy.\nBut real.\n\nI hoped — maybe — we could be that.",
+     reveal:"Choosing someone isn’t dramatic.\nIt’s daily.\nAnd I was already choosing you.",
+     bg:"linear-gradient(135deg,#fff1c1,#ffd6a5,#ffcab0)"},
+
+  6:{t:"Episode 4: Your Smile",
+     m:"Your smile arrives before my worries.\nBefore my doubts.\nBefore the noise.\n\nIt changes everything.",
+     reveal:"If peace had a face,\nit would look like that smile.",
+     bg:"linear-gradient(135deg,#e0e7ff,#c7d2fe,#a5b4fc)"},
+
+  7:{t:"Episode 5: Comfort Arc",
+     m:"Not every day needs fixing.\nSome days need staying.\nSitting quietly.\nSharing the weight.",
+     reveal:"Comfort isn’t small.\nIt’s love learning to rest.",
+     bg:"linear-gradient(135deg,#1f2933,#374151,#4b5563)"},
+
+  8:{t:"Episode: Growing Feelings 💜",
+     m:"Some feelings don’t arrive loudly.\nThey grow quietly.\nThrough time.\nThrough trust.\nThrough you.",
+     reveal:"If love grows like this,\nthen I’m already home.",
+     bg:"linear-gradient(135deg,#cbb7ff,#8b7cf0,#4b3f72)"},
+
+  9:{t:"Episode: Almost a Promise",
+     m:"Not perfect.\nNot certain.\nJust honest.\n\nI wanted you.",
+     reveal:"And wanting stayed.",
+     bg:"linear-gradient(135deg,#fbcfe8,#f9a8d4,#f472b6)"},
+
+  10:{t:"Episode: Countdown",
+      m:"The days started leaning forward.\nSomething was coming.\nSomething honest.",
+      reveal:"Some feelings know where they’re going.",
+      bg:"linear-gradient(135deg,#fde68a,#fcd34d,#fbbf24)"},
+
+  11:{t:"Episode: Every Timeline 🌌",
+      m:"Different cities.\nDifferent choices.\nDifferent versions of life.\n\nAnd still — you.",
+      reveal:"If there are a thousand timelines,\nI choose you in all of them.",
+      bg:"linear-gradient(135deg,#1b1736,#4b3f72,#8b7cf0)"},
+
+  12:{t:"Episode: Two Days Left",
+      m:"Almost there.\nThe quiet before truth.",
+      reveal:"Sometimes waiting is love being patient.",
+      bg:"linear-gradient(135deg,#ede9fe,#ddd6fe,#c4b5fd)"},
+
+  13:{t:"Episode: Tonight",
+      m:"Tomorrow changes everything.",
+      reveal:"And I’m ready.",
+      bg:"linear-gradient(135deg,#312e81,#4338ca,#6366f1)"},
+
+  14:{t:"Final Episode: Valentine’s 💖",
+      m:"All of this led here.\n\nWill you be my Valentine?",
+      reveal:"Thank you for being the story that changed me.",
+      bg:"linear-gradient(135deg,#ff5c8a,#ffb3c7,#ffd6e8)"}
 };
 
 /* ========= INIT ========= */
-const today= 11;
+const today=new Date().getDate();
 const ep=episodes[today] || episodes[8];
 
 document.body.style.background=ep.bg;
@@ -205,8 +220,7 @@ document.getElementById("title").style.fontFamily="'Playfair Display', serif";
 const textEl=document.getElementById("text");
 textEl.innerText=ep.m;
 
-/* Effects */
-for(let i=0;i<18;i++){
+for(let i=0;i<16;i++){
   const o=document.createElement("div");
   o.className="orb";
   o.style.width=o.style.height=(10+Math.random()*18)+"px";
@@ -216,7 +230,6 @@ for(let i=0;i<18;i++){
   document.body.appendChild(o);
 }
 
-/* Heart reveal */
 let revealed=false;
 document.getElementById("heart").onclick=()=>{
   if(revealed) return;
@@ -228,24 +241,18 @@ document.getElementById("heart").onclick=()=>{
   },900);
 };
 
-/* Audio */
 function startExperience(){
   const a=document.getElementById("music");
   a.volume=0;
   a.play().then(()=>{
     let v=0;
-    const f=setInterval(()=>{
-      if(v>=1)clearInterval(f);
-      a.volume=v; v+=0.05;
-    },100);
+    const f=setInterval(()=>{if(v>=1)clearInterval(f);a.volume=v;v+=0.05},100);
   });
   document.getElementById("audioOverlay").style.display="none";
 }
 
-/* Midnight refresh */
 const now=new Date();
-const midnight=new Date();
-midnight.setHours(24,0,0,0);
+const midnight=new Date(); midnight.setHours(24,0,0,0);
 setTimeout(()=>{
   document.getElementById("toast").classList.add("show");
   setTimeout(()=>{
