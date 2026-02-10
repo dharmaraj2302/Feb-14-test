@@ -48,6 +48,7 @@ h1{
   font-family:'Playfair Display',serif;
   color:var(--text);
 }
+
 p{
   color:var(--text);
   margin-top:16px;
@@ -68,7 +69,6 @@ p{
   50%{transform:scale(1.22)}
 }
 
-/* 💫 Episode 11 Cosmic Heart */
 .cosmic-heart{
   animation:cosmicPulse 2.8s ease-in-out infinite;
   filter:drop-shadow(0 0 14px rgba(139,124,240,.85));
@@ -78,7 +78,6 @@ p{
   50%{transform:scale(1.38)}
 }
 
-/* 🌠 Orbs */
 .orb{
   position:absolute;
   border-radius:50%;
@@ -91,7 +90,6 @@ p{
   50%{transform:translateY(-22px)}
 }
 
-/* ✨ Stars (Episode 11 only) */
 .star{
   position:absolute;
   width:2px;
@@ -171,16 +169,19 @@ const episodes={
   8:{t:"Episode: Growing Feelings 💜",m:"They grow quietly.",reveal:"I’m already home.",bg:"linear-gradient(135deg,#cbb7ff,#8b7cf0,#4b3f72)"},
   9:{t:"Episode: Almost a Promise",m:"I wanted you.",reveal:"And wanting stayed.",bg:"linear-gradient(135deg,#fbcfe8,#f9a8d4,#f472b6)"},
   10:{t:"Episode: Countdown",m:"Something honest was coming.",reveal:"Some feelings know.",bg:"linear-gradient(135deg,#fde68a,#fcd34d,#fbbf24)"},
+
+  /* 🌌 ENHANCED CONTENT ONLY */
   11:{t:"Episode: Every Timeline 🌌",
-      m:"Across universes and choices,\nmy heart still finds you.",
-      reveal:"In every timeline — it’s you.",
+      m:"Across universes and choices,\nmy heart still finds you.\n\nEven when the paths change,\neven when the timing doesn’t align,\nsomething in me always remembers.\n\nBecause love isn’t bound by moments —\nit’s written deeper than time itself.",
+      reveal:"In every version of life,\nin every almost and every forever,\nI would still find you.\nStill choose you.\n\nIn every timeline — it’s you.",
       bg:"linear-gradient(135deg,#0b1026,#1b1736,#4b3f72,#8b7cf0)"},
+
   12:{t:"Episode: Two Days Left",m:"Almost there.",reveal:"Love waits.",bg:"linear-gradient(135deg,#ede9fe,#ddd6fe,#c4b5fd)"},
   13:{t:"Episode: Tonight",m:"Tomorrow changes everything.",reveal:"I’m ready.",bg:"linear-gradient(135deg,#312e81,#4338ca,#6366f1)"},
   14:{t:"Final Episode: Valentine’s 💖",m:"Will you be my Valentine?",reveal:"Thank you for being my story.",bg:"linear-gradient(135deg,#ff5c8a,#ffb3c7,#ffd6e8)"}
 };
 
-const today= 11;
+const today=new Date().getDate();
 const ep=episodes[today]||episodes[11];
 
 document.body.style.background=ep.bg;
@@ -190,7 +191,6 @@ document.body.style.animation="auroraMove 18s ease infinite";
 title.innerText=ep.t;
 text.innerText=ep.m;
 
-/* Episode 11 visuals */
 if(today===11){
   heart.classList.add("cosmic-heart");
   for(let i=0;i<60;i++){
