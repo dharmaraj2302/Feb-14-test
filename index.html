@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Lekha 🌸</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;600;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
@@ -12,8 +12,8 @@
 *{margin:0;padding:0;box-sizing:border-box}
 
 :root{
-  --text:#ffffff;
-  --card-bg:rgba(255,255,255,0.22);
+  --text:#1f1f1f;
+  --card-bg:rgba(255,255,255,0.94);
 }
 
 body{
@@ -23,19 +23,19 @@ body{
   align-items:center;
   justify-content:center;
   overflow:hidden;
-  transition:background 1.5s ease,opacity 1.2s ease;
+  transition:background 1.5s ease, opacity 1.2s ease;
 }
 
 .fade-out{opacity:0}
 
+/* Card */
 .card{
   background:var(--card-bg);
-  backdrop-filter:blur(14px);
-  padding:42px 34px;
-  border-radius:30px;
+  padding:44px 34px;
+  border-radius:28px;
   text-align:center;
   width:min(92%,520px);
-  box-shadow:0 0 60px rgba(255,255,255,0.35);
+  box-shadow:0 20px 60px rgba(0,0,0,.18);
   animation:float 6s ease-in-out infinite;
 }
 
@@ -46,8 +46,7 @@ body{
 
 h1{
   color:var(--text);
-  font-size:clamp(1.8rem,5vw,2.5rem);
-  text-shadow:0 0 18px rgba(255,255,255,.7);
+  font-size:clamp(1.8rem,5vw,2.4rem);
 }
 
 p{
@@ -77,18 +76,24 @@ p{
 /* Effects */
 .sakura,.orb{
   position:absolute;
-  opacity:.7;
   pointer-events:none;
 }
 
-.sakura{animation:fall linear infinite}
-@keyframes fall{to{transform:translateY(120vh) rotate(360deg)}}
+.sakura{
+  opacity:.8;
+  animation:fall linear infinite;
+}
+
+@keyframes fall{
+  to{transform:translateY(120vh) rotate(360deg)}
+}
 
 .orb{
   border-radius:50%;
-  background:rgba(255,255,255,.6);
+  background:rgba(255,255,255,.7);
   animation:floatOrb ease-in-out infinite;
 }
+
 @keyframes floatOrb{
   0%,100%{transform:translateY(0)}
   50%{transform:translateY(-22px)}
@@ -107,7 +112,7 @@ p{
   bottom:28px;
   left:50%;
   transform:translateX(-50%);
-  background:rgba(0,0,0,.7);
+  background:#111;
   color:white;
   padding:14px 24px;
   border-radius:30px;
@@ -123,7 +128,7 @@ p{
   position:fixed;
   inset:0;
   background:rgba(0,0,0,.6);
-  backdrop-filter:blur(8px);
+  backdrop-filter:blur(6px);
   display:flex;
   align-items:center;
   justify-content:center;
@@ -133,15 +138,6 @@ p{
   font-size:1rem;
   padding:16px 30px;
   border-radius:40px;
-}
-
-/* Mobile fine-tuning */
-@media (max-width:480px){
-  .card{
-    padding:36px 26px;
-    border-radius:26px;
-  }
-  p{line-height:1.7}
 }
 </style>
 </head>
@@ -165,77 +161,65 @@ p{
 <div class="toast" id="toast">🌙 New episode unlocked</div>
 
 <script>
+/* ========= EPISODES ========= */
 const episodes={
-  3:{t:"Episode 1: A Confession 🌸",m:"Will you be mine?",bg:"#ffd6d6"},
-  4:{t:"Episode 2: You Appear",m:"You appear like a scene I replay.",bg:"#e6d9ff"},
-  5:{t:"Episode 3: The Us 🧸💕",m:"I hope one day it’s us.",bg:"#fff1d6"},
-  6:{t:"Episode 4: Your Smile",m:"Your smile is where peace begins.",bg:"#e6e1ff"},
-  7:{t:"Episode 5: Comfort Arc",m:"Some days just need someone who stays.",bg:"#2f3e55"},
-  8:{t:"Episode 6: Growing Feelings",m:"My heart has been buffering… and it’s you.",bg:"#d9f7ff"},
-  9:{t:"Episode 7: Almost a Promise",m:"I don’t want perfect. I want you.",bg:"#f3d9ff"},
-  10:{t:"Episode 8: Countdown",m:"Something is quietly building.",bg:"#fff6d9"},
-
-  11:{
-    t:"Episode: When Love Feels Like Home 🕊️",
+  8:{
+    t:"Episode: Growing Feelings 💜",
     m:
-"Somewhere between conversations and comfortable silences,\nbetween laughter that comes easily and pauses that don’t need filling,\nyou stopped feeling like a thought I visited —\nand started feeling like a place I belonged.\n\nI didn’t notice the exact moment it happened.\nIt was subtle.\nGentle.\nLike realizing you’ve been holding someone’s hand for a long time\nand never wanting to let go.\n\nThere was no rush.\nNo fear.\nJust a quiet certainty\nthat my heart had already chosen its home.",
+"Some feelings don’t arrive loudly.\nThey grow quietly — through conversations,\nthrough comfort,\nthrough the way your presence makes everything softer.\n\nSomewhere between laughter and silence,\nmy heart stopped asking questions\nand started choosing you.",
     reveal:
-"I didn’t fall all at once.\nI stayed.\nI paid attention.\nI chose you in ordinary moments —\nand somehow, those moments became everything.\n\nI don’t imagine futures loudly anymore.\nI imagine mornings.\nShared glances.\nComfort.\nStaying.\n\nAnd every version of that life,\nevery calm tomorrow I picture,\nhas you in it —\nwithout question,\nwithout doubt.",
-    bg:"linear-gradient(135deg,#d7c9ff,#7a6fd1,#1f1b3a)",
-    effect:"aurora",
-    font:"playfair"
+"It wasn’t dramatic.\nIt was natural.\nLike realizing you feel safe.\nLike knowing that staying doesn’t feel heavy.\n\nIf love grows like this —\nthen I’m already home.",
+    bg:"linear-gradient(135deg,#cbb7ff,#8b7cf0,#4b3f72)"
   },
 
-  12:{t:"Episode 9: Every Timeline",m:"Every universe. Still you.",bg:"#e0ecff"},
-  13:{t:"Episode 10: Two Days Left",m:"Almost there…",bg:"#f1e6ff"},
-  14:{t:"Final Episode: Valentine’s 💖",m:"Will you be my Valentine?",bg:"#ff5c8a"}
+  11:{
+    t:"Episode: Every Timeline 🌌",
+    m:
+"Sometimes I wonder how many versions of life exist.\n\nDifferent cities.\nDifferent choices.\nDifferent timings.\n\nAnd somehow — in every one of them —\nI still find you.\n\nNot because fate is loud,\nbut because my heart always recognizes the same feeling.",
+    reveal:
+"It’s not about perfection.\nIt’s about familiarity.\n\nThe way your presence feels steady.\nThe way silence with you never feels empty.\n\nIf there are a thousand timelines,\nI’d choose you in every single one —\nwithout hesitation.",
+    bg:"linear-gradient(135deg,#1b1736,#4b3f72,#8b7cf0)"
+  },
+
+  14:{
+    t:"Final Episode: Valentine’s 💖",
+    m:
+"Lekha…\n\nAll these days weren’t just moments.\nThey were me learning how love feels.\n\nIf this story has a future,\nI hope it’s one we write together.\n\nWill you be my Valentine?",
+    reveal:
+"No matter your answer —\nthank you for being the chapter\nthat changed me forever.",
+    bg:"linear-gradient(135deg,#ff5c8a,#ffb3c7,#ffd6e8)"
+  }
 };
 
+/* ========= INIT ========= */
 const today=new Date().getDate();
-const ep=episodes[today]||episodes[3];
+const ep=episodes[today] || episodes[8];
 
 document.body.style.background=ep.bg;
 document.body.style.backgroundSize="300% 300%";
-if(ep.effect==="aurora"){
-  document.body.style.animation="auroraMove 20s ease infinite";
-}
+document.body.style.animation="auroraMove 18s ease infinite";
 
 document.getElementById("title").innerText=ep.t;
-if(ep.font==="playfair"){
-  document.getElementById("title").style.fontFamily="'Playfair Display', serif";
-}
+document.getElementById("title").style.fontFamily="'Playfair Display', serif";
 
 const textEl=document.getElementById("text");
 textEl.innerText=ep.m;
 
 /* Effects */
-if(ep.effect==="aurora"){
-  for(let i=0;i<18;i++){
-    const o=document.createElement("div");
-    o.className="orb";
-    o.style.width=o.style.height=(10+Math.random()*18)+"px";
-    o.style.left=Math.random()*100+"vw";
-    o.style.top=Math.random()*100+"vh";
-    o.style.opacity="0.4";
-    o.style.animationDuration=(12+Math.random()*10)+"s";
-    document.body.appendChild(o);
-  }
-}else{
-  for(let i=0;i<26;i++){
-    const s=document.createElement("div");
-    s.className="sakura";
-    s.innerText="🌸";
-    s.style.left=Math.random()*100+"vw";
-    s.style.fontSize=(14+Math.random()*22)+"px";
-    s.style.animationDuration=(8+Math.random()*10)+"s";
-    document.body.appendChild(s);
-  }
+for(let i=0;i<18;i++){
+  const o=document.createElement("div");
+  o.className="orb";
+  o.style.width=o.style.height=(10+Math.random()*18)+"px";
+  o.style.left=Math.random()*100+"vw";
+  o.style.top=Math.random()*100+"vh";
+  o.style.animationDuration=(12+Math.random()*10)+"s";
+  document.body.appendChild(o);
 }
 
 /* Heart reveal */
 let revealed=false;
 document.getElementById("heart").onclick=()=>{
-  if(revealed||!ep.reveal) return;
+  if(revealed) return;
   revealed=true;
   textEl.classList.add("fade-text");
   setTimeout(()=>{
@@ -260,7 +244,8 @@ function startExperience(){
 
 /* Midnight refresh */
 const now=new Date();
-const midnight=new Date(); midnight.setHours(24,0,0,0);
+const midnight=new Date();
+midnight.setHours(24,0,0,0);
 setTimeout(()=>{
   document.getElementById("toast").classList.add("show");
   setTimeout(()=>{
