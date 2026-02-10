@@ -6,12 +6,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 
 :root{
-  --text:#fff;
+  --text:#ffffff;
   --card-bg:rgba(255,255,255,0.22);
 }
 
@@ -54,7 +55,7 @@ p{
   color:var(--text);
   font-size:1.15rem;
   margin-top:15px;
-  line-height:1.75;
+  line-height:1.8;
   white-space:pre-line;
   transition:opacity .8s ease;
 }
@@ -90,6 +91,13 @@ p{
 @keyframes floatOrb{
   0%,100%{transform:translateY(0)}
   50%{transform:translateY(-25px)}
+}
+
+/* Aurora */
+@keyframes auroraMove{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
 }
 
 /* Toast */
@@ -154,40 +162,55 @@ const episodes={
   7:{t:"Episode 5: Comfort Arc",m:"Some days just need someone who stays.",bg:"#2f3e55"},
   8:{t:"Episode 6: Growing Feelings",m:"My heart has been buffering… and it’s you.",bg:"#d9f7ff"},
   9:{t:"Episode 7: Almost a Promise",m:"I don’t want perfect. I want you.",bg:"#f3d9ff"},
-  10:{
-    t:"Episode: The Quiet Realisation ✨",
-    m:"Some feelings don’t announce themselves.\nThey settle in quietly.\n\nOne day you realise\nyou’re no longer searching —\nbecause your heart already knows where it belongs.",
-    reveal:"I didn’t fall all at once.\nI stayed.\nI noticed.\n\nAnd somewhere between ordinary moments,\nyou became my constant thought.\n\nThat’s when I knew —\nthis wasn’t fleeting.\nThis was real.",
-    bg:"linear-gradient(135deg,#c3b4ff,#8b7ccf,#2f2b55)",
-    effect:"orbs"
+  10:{t:"Episode 8: Countdown",m:"Something is quietly building.",bg:"#fff6d9"},
+
+  11:{
+    t:"Episode: When Love Feels Like Home 🕊️",
+    m:
+"Somewhere between conversations and comfortable silences,\nbetween laughter that comes easily and pauses that don’t need filling,\nyou stopped feeling like a thought I visited —\nand started feeling like a place I belonged.\n\nI didn’t notice the exact moment it happened.\nIt was subtle.\nGentle.\nLike realizing you’ve been holding someone’s hand for a long time\nand never wanting to let go.\n\nThere was no rush.\nNo fear.\nJust a quiet certainty\nthat my heart had already chosen its home.",
+    reveal:
+"I didn’t fall all at once.\nI stayed.\nI paid attention.\nI chose you in ordinary moments —\nand somehow, those moments became everything.\n\nI don’t imagine futures loudly anymore.\nI imagine mornings.\nShared glances.\nComfort.\nStaying.\n\nAnd every version of that life,\nevery calm tomorrow I picture,\nhas you in it —\nwithout question,\nwithout doubt.",
+    bg:"linear-gradient(135deg,#d7c9ff,#7a6fd1,#1f1b3a)",
+    effect:"aurora",
+    font:"playfair"
   },
-  11:{t:"Episode 9: Every Timeline",m:"Every universe. Still you.",bg:"#e0ecff"},
-  12:{t:"Episode 10: Two Days Left",m:"Almost there…",bg:"#f1e6ff"},
-  13:{t:"Episode 11: Tonight",m:"Tomorrow changes everything.",bg:"#3b3b5f"},
+
+  12:{t:"Episode 9: Every Timeline",m:"Every universe. Still you.",bg:"#e0ecff"},
+  13:{t:"Episode 10: Two Days Left",m:"Almost there…",bg:"#f1e6ff"},
   14:{t:"Final Episode: Valentine’s 💖",m:"Will you be my Valentine?",bg:"#ff5c8a"}
 };
 
-const today= 10;
+const today= 11;
 const ep=episodes[today]||episodes[3];
 
 document.body.style.background=ep.bg;
+document.body.style.backgroundSize="300% 300%";
+if(ep.effect==="aurora"){
+  document.body.style.animation="auroraMove 20s ease infinite";
+}
+
 document.getElementById("title").innerText=ep.t;
+if(ep.font==="playfair"){
+  document.getElementById("title").style.fontFamily="'Playfair Display', serif";
+}
+
 const textEl=document.getElementById("text");
 textEl.innerText=ep.m;
 
 /* Effects */
-if(ep.effect==="orbs"){
-  for(let i=0;i<25;i++){
+if(ep.effect==="aurora"){
+  for(let i=0;i<18;i++){
     const o=document.createElement("div");
     o.className="orb";
-    o.style.width=o.style.height=(6+Math.random()*10)+"px";
+    o.style.width=o.style.height=(10+Math.random()*18)+"px";
     o.style.left=Math.random()*100+"vw";
     o.style.top=Math.random()*100+"vh";
-    o.style.animationDuration=(8+Math.random()*10)+"s";
+    o.style.opacity="0.4";
+    o.style.animationDuration=(12+Math.random()*10)+"s";
     document.body.appendChild(o);
   }
 }else{
-  for(let i=0;i<28;i++){
+  for(let i=0;i<26;i++){
     const s=document.createElement("div");
     s.className="sakura";
     s.innerText="🌸";
@@ -199,10 +222,10 @@ if(ep.effect==="orbs"){
 }
 
 /* Heart reveal */
-let done=false;
+let revealed=false;
 document.getElementById("heart").onclick=()=>{
-  if(done||!ep.reveal) return;
-  done=true;
+  if(revealed||!ep.reveal) return;
+  revealed=true;
   textEl.classList.add("fade-text");
   setTimeout(()=>{
     textEl.innerText=ep.reveal;
